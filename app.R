@@ -7,6 +7,8 @@ library(RColorBrewer)
 library(gsheet)
 library(bubbles)
 
+# enter a new line
+
 # 1 = beginner, 2 = intermediate, 3 = advanced, 4 = expert
 df <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1grp7lbnPc1SWTxPTAt8BMK8XYsTkEnt3KZ5Z1Qmhb0s/edit?usp=sharing")
 df_t <- df %>%
