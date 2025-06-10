@@ -1,0 +1,19 @@
+version: '2.0'
+workflow:
+  tasks:
+    import_bike_data:
+      action: civis.scripts.custom
+      input:
+        from_template_id: 283004
+        arguments:
+          OBJECTS_TO_IMPORT: station_status, station_information
+          DESTINATION_SCHEMA_NAME: dc
+          DB:
+            credential: 2079
+            database: 326
+      on-success:
+        - SQL_Transform
+    SQL_Transform:
+      action: civis.run_job
+      input:
+        job_id: 314866885
