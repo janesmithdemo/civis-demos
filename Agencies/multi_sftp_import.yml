@@ -1,0 +1,52 @@
+version: '2.0'
+workflow:
+# comment to lock the graph
+  tasks:
+    fetch_account_codes:
+      action: std.noop
+      publish:
+        account_codes:
+          - XXXX
+          - YYYY
+      on-success: SFTP_MULTI
+    SFTP_MULTI:
+      action: civis.run_job
+      input:
+        job_id: 318037921
+      on-success: LOAD_ACCOUNT_TABLES
+    LOAD_ACCOUNT_TABLES:
+      action: civis.scripts.custom
+      with-items: account_code in <% $.account_codes %>
+      input:
+        from_template_id: 9002
+        arguments:
+          COLUMN_DELIMITER: comma
+          HAS_HEADER: true
+          IF_EXISTS: drop
+          TARGET_DATABASE:
+            credential: 2078
+            database: 326
+          FILE_REGEX: account_<% $.account_code %>
+          TABLE_NAME: prospects.account_<% $.account_code %>_raw_stg
+          ERROR_BAD_LINES: true
+          QUOTING: QUOTE_MINIMAL
+          DTYPE: object
+          DOUBLEQUOTE: true
+          SKIPFOOTER: '0'
+          CIVIS_PARENT_JOB_ID: 318037921
+          REQUIRED_CPU: '256'
+          REQUIRED_MEMORY: '2048'
+          REQUIRED_DISK_SPACE: '1'
+      on-success: Logging
+    Logging:
+      action: civis.scripts.custom
+      with-items: account_code in <% $.account_codes %>
+      input:
+        from_template_id: 285463
+        credential_id: 2078
+        remote_host_id: 326
+        arguments:
+          LOG_SCHEMA: ingestion_logs
+          LOG_TABLE: account_file_loads
+          ACCOUNT_CODE: <% $.account_code %>
+          INGESTION_SCHEMA: prospects
