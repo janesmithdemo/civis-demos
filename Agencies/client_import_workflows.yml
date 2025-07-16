@@ -4,7 +4,7 @@ workflow:
     client_A_import_workflow:
       action: civis.workflows.execute
       input:
-        workflow_id: 0
+        workflow_id: 112187
     client_b_import_workflow:
       action: civis.workflows.execute
       input:
