@@ -1,0 +1,30 @@
+version: '2.0'
+workflow:
+  tasks:
+    client_imports:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 114215
+      on-success:
+        - client_data_transform
+    operational_data_imports:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
+      on-success: ops_data_transform
+    client_data_transform:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
+      join: all
+      on-success: Export_to_DW
+    Export_to_DW:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
+      join: all
+    ops_data_transform:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
+      on-success: Export_to_DW
