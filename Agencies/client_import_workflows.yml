@@ -1,0 +1,11 @@
+version: '2.0'
+workflow:
+  tasks:
+    client_A_Import_Workflow:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
+    client_b_import_workflow:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 0
