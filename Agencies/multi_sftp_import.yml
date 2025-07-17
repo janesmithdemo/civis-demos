@@ -50,3 +50,5 @@ workflow:
           LOG_TABLE: account_file_loads
           ACCOUNT_CODE: <% $.account_code %>
           INGESTION_SCHEMA: prospects
+    one_off:
+      action: std.noop
