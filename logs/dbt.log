@@ -1,0 +1,101 @@
+[0m15:08:42.108956 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e44a6d1c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e44fe9a90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e44a6d340>]}
+
+
+============================== 15:08:42.149088 | 14a75ac1-bd30-409b-9185-c27611ec5176 ==============================
+[0m15:08:42.149088 [info ] [MainThread]: Running with dbt=1.10.3
+[0m15:08:42.155577 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '/config/.dbt', 'version_check': 'True', 'fail_fast': 'False', 'log_path': 'logs', 'debug': 'False', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'None', 'log_format': 'default', 'introspect': 'True', 'static_parser': 'True', 'invocation_command': 'dbt init', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'send_anonymous_usage_stats': 'True'}
+[0m15:08:42.206466 [info ] [MainThread]: Creating dbt configuration folder at /config/.dbt
+[0m15:08:49.938728 [debug] [MainThread]: Starter project path: /usr/local/lib/python3.12/dist-packages/dbt/include/starter_project
+[0m15:08:50.364344 [info ] [MainThread]: 
+Your new dbt project "salesforce_transform" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m15:08:50.364847 [info ] [MainThread]: Setting up your profile.
+[0m15:08:57.097314 [debug] [MainThread]: Redshift adapter: Setting redshift_connector to ERROR
+[0m15:08:57.100105 [debug] [MainThread]: Redshift adapter: Setting redshift_connector.core to ERROR
+[0m15:11:39.528881 [info ] [MainThread]: Profile salesforce_transform written to /config/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m15:11:39.532859 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 177.51285, "process_in_blocks": "8", "process_kernel_time": 0.476052, "process_mem_max_rss": "130884", "process_out_blocks": "136", "process_user_time": 3.862836}
+[0m15:11:39.533632 [debug] [MainThread]: Command `dbt init` succeeded at 15:11:39.533506 after 177.51 seconds
+[0m15:11:39.538666 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e4840b8c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e43fcedb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f3e439fae10>]}
+[0m15:11:39.539098 [debug] [MainThread]: Flushing usage events
+[0m15:11:39.668917 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m15:12:43.295652 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f516a200b90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f516a9fd370>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f516b6d7b90>]}
+
+
+============================== 15:12:43.336589 | c9c284f1-e65b-4d6a-815a-233e174fd683 ==============================
+[0m15:12:43.336589 [info ] [MainThread]: Running with dbt=1.10.3
+[0m15:12:43.342170 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'debug': 'False', 'log_path': 'logs', 'fail_fast': 'False', 'profiles_dir': '/config/.dbt', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'introspect': 'True', 'log_format': 'default', 'invocation_command': 'dbt debug', 'target_path': 'None', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m15:12:43.396807 [info ] [MainThread]: dbt version: 1.10.3
+[0m15:12:43.397266 [info ] [MainThread]: python version: 3.12.11
+[0m15:12:43.403089 [info ] [MainThread]: python path: /usr/bin/python
+[0m15:12:43.403506 [info ] [MainThread]: os info: Linux-5.15.0-1085-aws-fips-x86_64-with-glibc2.35
+[0m15:12:44.127155 [debug] [MainThread]: Redshift adapter: Setting redshift_connector to ERROR
+[0m15:12:44.128197 [debug] [MainThread]: Redshift adapter: Setting redshift_connector.core to ERROR
+[0m15:12:44.221996 [info ] [MainThread]: Using profiles dir at /config/.dbt
+[0m15:12:44.222487 [info ] [MainThread]: Using profiles.yml file at /config/.dbt/profiles.yml
+[0m15:12:44.228267 [info ] [MainThread]: Using dbt_project.yml file at /workspace/civis-demos/dbt_project.yml
+[0m15:12:44.228985 [info ] [MainThread]: adapter type: redshift
+[0m15:12:44.229353 [info ] [MainThread]: adapter version: 1.9.0
+[0m15:12:44.234551 [info ] [MainThread]: Configuration:
+[0m15:12:44.235080 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m15:12:44.240236 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m15:12:44.240600 [info ] [MainThread]: Required dependencies:
+[0m15:12:44.246087 [debug] [MainThread]: Executing "git --help"
+[0m15:12:44.255720 [debug] [MainThread]: STDOUT: "b"usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           [--super-prefix=<path>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone     Clone a repository into a new directory\n   init      Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add       Add file contents to the index\n   mv        Move or rename a file, a directory, or a symlink\n   restore   Restore working tree files\n   rm        Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect    Use binary search to find the commit that introduced a bug\n   diff      Show changes between commits, commit and working tree, etc\n   grep      Print lines matching a pattern\n   log       Show commit logs\n   show      Show various types of objects\n   status    Show the working tree status\n\ngrow, mark and tweak your common history\n   branch    List, create, or delete branches\n   commit    Record changes to the repository\n   merge     Join two or more development histories together\n   rebase    Reapply commits on top of another base tip\n   reset     Reset current HEAD to the specified state\n   switch    Switch branches\n   tag       Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch     Download objects and refs from another repository\n   pull      Fetch from and integrate with another repository or a local branch\n   push      Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m15:12:44.256214 [debug] [MainThread]: STDERR: "b''"
+[0m15:12:44.261127 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m15:12:44.261864 [info ] [MainThread]: Connection:
+[0m15:12:44.267020 [info ] [MainThread]:   host: redshift.acme.civis.io
+[0m15:12:44.267359 [info ] [MainThread]:   user: jsmith
+[0m15:12:44.267633 [info ] [MainThread]:   port: 5432
+[0m15:12:44.273119 [info ] [MainThread]:   database: dev
+[0m15:12:44.273489 [info ] [MainThread]:   method: database
+[0m15:12:44.273782 [info ] [MainThread]:   cluster_id: None
+[0m15:12:44.274052 [info ] [MainThread]:   iam_profile: None
+[0m15:12:44.274301 [info ] [MainThread]:   schema: salesforce_staging
+[0m15:12:44.274569 [info ] [MainThread]:   sslmode: prefer
+[0m15:12:44.279541 [info ] [MainThread]:   region: None
+[0m15:12:44.279836 [info ] [MainThread]:   sslmode: prefer
+[0m15:12:44.280110 [info ] [MainThread]:   region: None
+[0m15:12:44.285281 [info ] [MainThread]:   autocreate: False
+[0m15:12:44.285597 [info ] [MainThread]:   db_groups: []
+[0m15:12:44.285845 [info ] [MainThread]:   ra3_node: False
+[0m15:12:44.286084 [info ] [MainThread]:   connect_timeout: None
+[0m15:12:44.290214 [info ] [MainThread]:   role: None
+[0m15:12:44.295907 [info ] [MainThread]:   retries: 1
+[0m15:12:44.296244 [info ] [MainThread]:   autocommit: True
+[0m15:12:44.296515 [info ] [MainThread]:   access_key_id: None
+[0m15:12:44.296936 [info ] [MainThread]: Registered adapter: redshift=1.9.0
+[0m15:12:44.484388 [debug] [MainThread]: Acquiring new redshift connection 'debug'
+[0m15:12:44.491984 [debug] [MainThread]: Using redshift connection "debug"
+[0m15:12:44.492467 [debug] [MainThread]: On debug: select 1 as id
+[0m15:12:44.497637 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m15:12:44.498009 [debug] [MainThread]: Redshift adapter: Connecting to Redshift with 'database' credentials method
+[0m15:12:44.566282 [debug] [MainThread]: Redshift adapter: Establishing connection using ssl with `sslmode` set to 'prefer'.To connect without ssl, set `sslmode` to 'disable'.
+[0m15:12:44.845719 [debug] [MainThread]: SQL status: SUCCESS in 0.348 seconds
+[0m15:12:44.892714 [debug] [MainThread]: On debug: Close
+[0m15:12:44.893422 [info ] [MainThread]:   Connection test: [[32mOK connection ok[0m]
+
+[0m15:12:44.898147 [info ] [MainThread]: [31m1 check failed:[0m
+[0m15:12:44.898616 [info ] [MainThread]: Project loading failed for the following reason:
+ project path </workspace/civis-demos/dbt_project.yml> not found
+
+[0m15:12:44.899942 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 1.7021518, "process_in_blocks": "0", "process_kernel_time": 0.475443, "process_mem_max_rss": "136508", "process_out_blocks": "240", "process_user_time": 4.266874}
+[0m15:12:44.904391 [debug] [MainThread]: Command `dbt debug` failed at 15:12:44.904259 after 1.71 seconds
+[0m15:12:44.909025 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m15:12:44.909417 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f5169d882c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f51697de8a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f51693c4e30>]}
+[0m15:12:44.915404 [debug] [MainThread]: Flushing usage events
+[0m15:12:45.013536 [debug] [MainThread]: An error was encountered while trying to flush usage events

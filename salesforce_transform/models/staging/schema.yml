@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: salesforce
+    description: Raw Salesforce data from CSV files
+    tables:
+      - name: contacts
+        description: Salesforce Contact object - individual donors
+      - name: opportunities
+        description: Salesforce Opportunity object - donations/gifts
+      - name: campaigns
+        description: Salesforce Campaign object - fundraising campaigns
+      - name: campaign_members
+        description: Salesforce CampaignMember object - links contacts to campaigns
+
+models:
+  - name: stg_salesforce__contacts
+    description: Staged contact data from Salesforce
+    columns:
+      - name: contact_id
+        description: Primary key for contacts
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_salesforce__opportunities
+    description: Staged opportunity data (donations) from Salesforce
+    columns:
+      - name: opportunity_id
+        description: Primary key for opportunities
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_salesforce__campaigns
+    description: Staged campaign data from Salesforce
+    columns:
+      - name: campaign_id
+        description: Primary key for campaigns
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_salesforce__campaign_members
+    description: Staged campaign member data - links contacts to campaigns
+    columns:
+      - name: campaign_member_id
+        description: Primary key for campaign members
+        tests:
+          - unique
+          - not_null
+      - name: campaign_id
+        description: Foreign key to campaigns
+      - name: contact_id
+        description: Foreign key to contacts

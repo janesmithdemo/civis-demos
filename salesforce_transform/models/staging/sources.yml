@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: salesforce_raw
+    schema: salesforce_raw
+    tables:
+      - name: contact
+      - name: campaign
+      - name: campaign_member
+      - name: opportunity

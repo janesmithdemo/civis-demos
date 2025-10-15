@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: campaign_performance
+    description: >
+      Campaign performance analysis showing key metrics for each fundraising campaign.
+      Includes donor acquisition, revenue generated, estimated lifetime value, and ROI calculations.
+    columns:
+      - name: campaign_id
+        description: Unique identifier for the campaign
+        tests:
+          - unique
+          - not_null
+      - name: campaign_name
+        description: Name of the fundraising campaign
+      - name: campaign_type
+        description: Type of campaign (Event, Email, Direct Mail, etc.)
+      - name: campaign_status
+        description: Current status of the campaign
+      - name: start_date
+        description: Campaign start date
+      - name: end_date
+        description: Campaign end date
+      - name: donors_acquired
+        description: Number of donors who responded to this campaign
+      - name: total_revenue_to_date
+        description: Total donation revenue from all donors acquired through this campaign
+      - name: avg_revenue_per_donor
+        description: Average revenue per donor acquired through this campaign
+      - name: direct_campaign_revenue
+        description: Revenue from donations directly attributed to this campaign
+      - name: estimated_total_lifetime_value
+        description: >
+          Estimated total lifetime value of all donors acquired through this campaign.
+          Calculated as: donors_acquired * historical_average_lifetime_value
+      - name: campaign_cost
+        description: Actual cost of running the campaign
+      - name: net_revenue_to_date
+        description: Net revenue (total revenue minus campaign cost)
+      - name: roi_percent
+        description: Return on investment percentage based on revenue to date
+      - name: projected_roi_percent
+        description: Projected ROI percentage using estimated lifetime value
+
+  - name: contact
+    description: >
+      Contact dimension enriched with lifetime giving metrics and donor segmentation.
+      Each contact includes their complete giving history, tenure, and categorization.
+    columns:
+      - name: contact_id
+        description: Unique identifier for the contact
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Contact's first name
+      - name: last_name
+        description: Contact's last name
+      - name: email
+        description: Contact's email address
+      - name: phone
+        description: Contact's phone number
+      - name: mailing_city
+        description: Contact's city
+      - name: mailing_state
+        description: Contact's state
+      - name: mailing_postal_code
+        description: Contact's ZIP/postal code
+      - name: mailing_country
+        description: Contact's country
+      - name: created_date
+        description: Date the contact was created in Salesforce
+      - name: lifetime_giving_amount
+        description: Total amount donated across all time (closed-won opportunities only)
+      - name: lifetime_gift_count
+        description: Total number of donations made
+      - name: first_gift_date
+        description: Date of the contact's first donation
+      - name: last_gift_date
+        description: Date of the contact's most recent donation
+      - name: avg_gift_amount
+        description: Average donation amount per gift
+      - name: campaigns_supported
+        description: Number of distinct campaigns the contact has donated to
+      - name: is_donor
+        description: Boolean flag indicating if the contact has ever made a donation
+      - name: donor_tenure_years
+        description: Number of years between first gift and current date
+      - name: giving_tier
+        description: >
+          Segmentation based on lifetime giving amount:
+          Non-Donor, Under $100, $100-$499, $500-$999, $1,000-$4,999, $5,000-$9,999, $10,000+
+      - name: days_since_last_gift
+        description: Number of days between last gift and current date (recency metric)
+      - name: donor_frequency_category
+        description: >
+          Categorization based on number of gifts:
+          Never Donated, One-Time Donor, Occasional Donor (2-5), Regular Donor (6-12), Major Donor (13+)
