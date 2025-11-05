@@ -1,0 +1,30 @@
+version: '2.0'
+workflow:
+  tasks:
+    source_refresh_error:
+      action: civis.run_job
+      input:
+        job_id: 0
+      join: all
+    rebuild_golden_json:
+      action: civis.run_job
+      input:
+        job_id: 0
+      join: all
+      on-success: candid_golden_pipeline
+    refresh_990:
+      action: civis.workflows.execute
+      input:
+        workflow_id: 116570
+      on-success: rebuild_golden_json
+      on-error: source_refresh_error
+    refresh_grants:
+      action: civis.run_job
+      input:
+        job_id: 0
+      on-success: rebuild_golden_json
+      on-error: source_refresh_error
+    candid_golden_pipeline:
+      action: civis.run_job
+      input:
+        job_id: 0
