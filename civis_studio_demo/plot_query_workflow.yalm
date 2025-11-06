@@ -1,0 +1,43 @@
+version: '2.0'
+workflow:
+  input:
+    - DATABASE_CRED_NAME
+    - TABLE
+
+  tasks:
+    query_data:
+      action: civis.scripts.python3
+      input:
+        name: Query Iris Data
+        source: |
+          # First script content goes here
+        params:
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
+        arguments:
+          DATABASE_CRED_NAME: <% $.DATABASE_CRED_NAME %>
+          TABLE: <% $.TABLE %>
+        required_resources:
+          cpu: 1024
+          memory: 2048
+          disk_space: 4.0
+
+    create_plot:
+      action: civis.scripts.python3
+      depends_on:
+        - query_data
+      input:
+        name: Create Seaborn Plot
+        source: |
+          # Second script content goes here
+        params:
+          - name: DATABASE_CRED_NAME
+            type: string
+        arguments:
+          DATABASE_CRED_NAME: <% $.DATABASE_CRED_NAME %>
+        required_resources:
+          cpu: 1024
+          memory: 2048
+          disk_space: 4.0
