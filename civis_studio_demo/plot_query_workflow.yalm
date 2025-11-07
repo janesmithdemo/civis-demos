@@ -8,16 +8,24 @@ workflow:
       action: civis.run_job
       input:
         job_id: 331131699
+        arguments:
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
       on-success:
       - create_plot
     create_plot:
       action: civis.python3_script
       input:
         name: Create Seaborn Plot
-        source: |
-          # Your plotting code here
+        source: "# Your plotting code here\n"
+        params:
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
         arguments:
           DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
         required_resources:
           cpu: 1024
           memory: 2048
