@@ -1,40 +1,65 @@
 version: '2.0'
 workflow:
   input:
-    - DATABASE_CRED_NAME
-    - TABLE
-
+  - DATABASE_CRED_NAME
+  - TABLE
   tasks:
     query_data:
-      action: civis.scripts.python3
+      action: civis.python3_script
       input:
         name: Query Iris Data
-        script_id: 331131699
-        params:
-          - name: DATABASE_CRED_NAME
-            type: string
-          - name: TABLE
-            type: string
+        source: |
+          import os
+          import civis
+          import pandas as pd
+
+          # Get database credentials from environment variables
+          DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
+          TABLE = os.environ['TABLE']
+
+          # SQL query
+          query = f"""
+          SELECT
+              avg(petallength) petallength,
+              avg(sepalwidth) sepalwidth,
+              species
+          FROM
+              {TABLE}
+          GROUP BY
+              species
+          """
+
+          # Execute query and store results
+          result = civis.io.read_civis_sql(
+              sql=query,
+              database=DATABASE_CRED,
+              use_pandas=True
+          )
+
+          # Store the result as a Civis Platform file output
+          civis.io.dataframe_to_civis(
+              df=result,
+              table='query_results',
+              database=DATABASE_CRED,
+              existing_table_rows='drop'
+          )
         arguments:
-          DATABASE_CRED_NAME: <% $.DATABASE_CRED_NAME %>
-          TABLE: <% $.TABLE %>
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
         required_resources:
           cpu: 1024
           memory: 2048
           disk_space: 4.0
       on-success:
-        - create_plot
-
+      - create_plot
     create_plot:
-      action: civis.scripts.python3
+      action: civis.python3_script
       input:
         name: Create Seaborn Plot
-        script_id: 331131715
-        params:
-          - name: DATABASE_CRED_NAME
-            type: string
+        source: |
+          # Your plotting code here
         arguments:
-          DATABASE_CRED_NAME: <% $.DATABASE_CRED_NAME %>
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
         required_resources:
           cpu: 1024
           memory: 2048
