@@ -9,8 +9,7 @@ workflow:
       action: civis.scripts.python3
       input:
         name: Query Iris Data
-        source: |
-          # First script content goes here
+        script_id: 331131699
         params:
           - name: DATABASE_CRED_NAME
             type: string
@@ -30,8 +29,7 @@ workflow:
         - query_data
       input:
         name: Create Seaborn Plot
-        source: |
-          # Second script content goes here
+        script_id: 331131715
         params:
           - name: DATABASE_CRED_NAME
             type: string
