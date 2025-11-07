@@ -6,9 +6,47 @@ workflow:
   - TABLE
   tasks:
     query_data:
-      action: civis.run_job
+      action: civis.python3_script
       input:
-        job_id: 331131699
+        name: Query Data
+        source: |
+          import os
+          import civis
+          import pandas as pd
+
+          DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
+          TABLE = os.environ['TABLE']
+
+          query = f"""
+          SELECT
+              avg(petallength) petallength,
+              avg(sepalwidth) sepalwidth,
+              species
+          FROM
+              {TABLE}
+          GROUP BY
+              species
+          """
+
+          result = civis.io.read_civis_sql(
+              sql=query,
+              database=DATABASE_CRED,
+              use_pandas=True
+          )
+
+          civis.io.dataframe_to_civis(
+              df=result,
+              table='query_results',
+              database=DATABASE_CRED,
+              existing_table_rows='drop'
+          )
+        arguments:
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
+        required_resources:
+          cpu: 256
+          memory: 1024
+          disk_space: 2.0
       on-success:
       - create_plot
     create_plot:
