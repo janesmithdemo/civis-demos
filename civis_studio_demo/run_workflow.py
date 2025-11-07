@@ -9,13 +9,13 @@ client = civis.APIClient()
 WORKFLOW_ID = 116976
 
 # Define the input parameters, pulling both from environment variables
-workflow_params = {
+workflow_input = {
     "DATABASE_CRED_NAME": os.environ.get('DATABASE_CRED_NAME'),
     "TABLE": os.environ.get('TABLE')
 }
 
 # Start the workflow execution
-execution = client.workflows.post_executions(WORKFLOW_ID, arguments=workflow_params)
+execution = client.workflows.post_executions(WORKFLOW_ID, input=workflow_input)
 
 # Create a future to track the execution
 future = CivisFuture(
