@@ -26,7 +26,7 @@ workflow:
     create_plot:
       action: civis.scripts.python3
       depends_on:
-        - query_data
+        - query_data      # This ensures create_plot waits for query_data to complete
       input:
         name: Create Seaborn Plot
         script_id: 331131715
