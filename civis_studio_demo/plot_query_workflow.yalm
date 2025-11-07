@@ -17,15 +17,10 @@ workflow:
       action: civis.python3_script
       input:
         name: Create Seaborn Plot
-        source: "# Your plotting code here\n"
-        params:
-          - name: DATABASE_CRED_NAME
-            type: string
-          - name: TABLE
-            type: string
+        source: |
+          # Your plotting code here
         arguments:
           DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
-          TABLE: "<% $.TABLE %>"
         required_resources:
           cpu: 1024
           memory: 2048
