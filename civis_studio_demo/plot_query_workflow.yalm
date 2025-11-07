@@ -8,13 +8,6 @@ workflow:
       action: civis.run_job
       input:
         job_id: 331131699
-        params:
-          - name: DATABASE_CRED_NAME
-            type: string
-            value: "<% $.DATABASE_CRED_NAME %>"
-          - name: TABLE
-            type: string
-            value: "<% $.TABLE %>"
       on-success:
       - create_plot
     create_plot:
