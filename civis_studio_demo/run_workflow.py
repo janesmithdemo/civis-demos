@@ -10,12 +10,12 @@ WORKFLOW_ID = 116976
 
 # Define the input parameters, pulling both from environment variables
 workflow_params = {
-    "DATABASE_CRED_NAME": os.environ.get('DATABASE_CRED_NAME'),  # Will be passed as a parameter
-    "TABLE": os.environ.get('TABLE')  # Will be passed as a parameter
+    "DATABASE_CRED_NAME": os.environ.get('DATABASE_CRED_NAME'),
+    "TABLE": os.environ.get('TABLE')
 }
 
 # Start the workflow execution
-execution = client.workflows.post_executions(WORKFLOW_ID, params=workflow_params)
+execution = client.workflows.post_executions(WORKFLOW_ID, arguments=workflow_params)
 
 # Create a future to track the execution
 future = CivisFuture(
