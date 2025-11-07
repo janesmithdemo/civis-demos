@@ -22,10 +22,11 @@ workflow:
           cpu: 1024
           memory: 2048
           disk_space: 4.0
+      on-success:
+        - create_plot
 
     create_plot:
       action: civis.scripts.python3
-      depends_on: query_data    # Moved to same level as 'action'
       input:
         name: Create Seaborn Plot
         script_id: 331131715
