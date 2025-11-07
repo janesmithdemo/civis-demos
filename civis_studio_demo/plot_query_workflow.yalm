@@ -2,8 +2,8 @@
 version: '2.0'
 workflow:
   input:
-  - database_cred_name
-  - table
+  - DATABASE_CRED_NAME
+  - TABLE
   tasks:
     query_data:
       action: civis.python3_script
@@ -41,8 +41,8 @@ workflow:
               existing_table_rows='drop'
           )
         arguments:
-          DATABASE_CRED_NAME: "<% $.database_cred_name %>"
-          TABLE: "<% $.table %>"
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
         required_resources:
           cpu: 256
           memory: 1024
@@ -55,7 +55,7 @@ workflow:
         name: Create Seaborn Plot
         source: "# Your plotting code here\n"
         arguments:
-          DATABASE_CRED_NAME: "<% $.database_cred_name %>"
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
         required_resources:
           cpu: 1024
           memory: 2048
