@@ -64,6 +64,8 @@ workflow:
           - name: TABLE
             type: string
         source: |
+          import os
+          import civis
           import pandas as pd
           os.system("pip install seaborn")
           import seaborn as sns
