@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 
 # Get database credentials
 DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
+TABLE = os.environ['TABLE']
 
 # Read the data from the previous job
 df = civis.io.read_civis_sql(
-    sql="SELECT * FROM query_results",
+    sql="SELECT * FROM {TABLE}_civis_studio_demo",
     database=DATABASE_CRED,
     use_pandas=True
 )

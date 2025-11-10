@@ -28,7 +28,7 @@ result = civis.io.read_civis_sql(
 # Store the result as a Civis Platform file output
 civis.io.dataframe_to_civis(
     df=result,
-    table='query_results',
+    table='{TABLE}_civis_studio_demo',
     database=DATABASE_CRED,
     existing_table_rows='drop'
 )
