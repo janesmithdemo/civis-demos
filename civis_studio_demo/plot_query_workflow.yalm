@@ -58,6 +58,8 @@ workflow:
       action: civis.python3_script
       input:
         name: Create Seaborn Plot
+        requirements:
+          - seaborn
         source: |
           import os
           import civis
