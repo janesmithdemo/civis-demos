@@ -67,15 +67,9 @@ workflow:
           import os
           import civis
           import pandas as pd
+          os.system("pip install seaborn")
           import seaborn as sns
           import matplotlib.pyplot as plt
-
-          # Install seaborn package first
-          print("Installing seaborn...")
-          os.system("pip install seaborn")
-
-          # Import seaborn after installation
-          import seaborn as sns
 
           DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
           TABLE = os.environ['TABLE']
@@ -86,7 +80,6 @@ workflow:
               return_as="pandas"
           )
 
-          plt.style.use('seaborn')
           sns.set_palette("husl")
 
           plt.figure(figsize=(10, 6))
