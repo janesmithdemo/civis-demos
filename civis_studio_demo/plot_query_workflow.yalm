@@ -70,9 +70,12 @@ workflow:
           import seaborn as sns
           import matplotlib.pyplot as plt
 
-          # Install seaborn package
-          import os
+          # Install seaborn package first
+          print("Installing seaborn...")
           os.system("pip install seaborn")
+
+          # Import seaborn after installation
+          import seaborn as sns
 
           DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
           TABLE = os.environ['TABLE']
