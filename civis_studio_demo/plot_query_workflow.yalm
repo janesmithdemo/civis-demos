@@ -55,7 +55,7 @@ workflow:
       on-success:
       - create_plot
     create_plot:
-      action: civis.python3_script
+      action: civis.scripts.python3
       input:
         name: Create Seaborn Plot
         params: 
@@ -63,14 +63,16 @@ workflow:
             type: string
           - name: TABLE
             type: string
-        dependencies:
-          - seaborn
         source: |
           import os
           import civis
           import pandas as pd
           import seaborn as sns
           import matplotlib.pyplot as plt
+
+          # Install seaborn package
+          import os
+          os.system("pip install seaborn")
 
           DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
           TABLE = os.environ['TABLE']
