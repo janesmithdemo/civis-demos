@@ -9,6 +9,11 @@ workflow:
       action: civis.python3_script
       input:
         name: Query Data
+        params: 
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
         source: |
           import os
           import civis
