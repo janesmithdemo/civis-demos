@@ -58,7 +58,12 @@ workflow:
       action: civis.python3_script
       input:
         name: Create Seaborn Plot
-        requirements:
+        params: 
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
+        dependencies:
           - seaborn
         source: |
           import os
@@ -73,7 +78,7 @@ workflow:
           df = civis.io.read_civis_sql(
               sql=f"SELECT * FROM public.iris_civis_studio_demo",
               database=DATABASE_CRED,
-              return_as="pandas"  # Updated from use_pandas=True
+              return_as="pandas"
           )
 
           plt.style.use('seaborn')
