@@ -64,8 +64,6 @@ workflow:
           - name: TABLE
             type: string
         source: |
-          import os
-          import civis
           import pandas as pd
           os.system("pip install seaborn")
           import seaborn as sns
@@ -96,8 +94,23 @@ workflow:
           plt.xticks(rotation=45)
           plt.tight_layout()
 
+          # Save locally
           plt.savefig('iris_plot.png')
+
+          # Save to Civis Files
           file_id = civis.io.file_to_civis('iris_plot.png', 'Iris Measurements Plot')
+
+          # Print the file_id so you can see it in the logs
+          print(f"File ID: {file_id}")
+
+          # Add as run output using the correct endpoint for Python scripts
+          client = civis.APIClient()
+          client.scripts.post_python3_runs_outputs(
+              id=int(os.environ['CIVIS_JOB_ID']),
+              run_id=int(os.environ['CIVIS_RUN_ID']),
+              object_type='File',
+              object_id=file_id
+          )
         arguments:
           DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
           TABLE: "<% $.TABLE %>"
