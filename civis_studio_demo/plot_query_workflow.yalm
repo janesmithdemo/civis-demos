@@ -41,7 +41,7 @@ workflow:
 
           civis.io.dataframe_to_civis(
               df=result,
-              table='{TABLE}_civis_studio_demo',
+              table='public.iris_civis_studio_demo',
               database=DATABASE_CRED,
               existing_table_rows='drop'
           )
