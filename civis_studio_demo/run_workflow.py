@@ -2,8 +2,6 @@ import civis
 import os
 from civis.futures import CivisFuture
 
-## this is a test note
-
 # Initialize the client
 client = civis.APIClient()
 

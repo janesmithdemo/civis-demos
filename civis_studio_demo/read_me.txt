@@ -10,3 +10,5 @@ cd /workspace/civis-demos/civis_studio_demo
 
 To run the job run_workflow.py fun this command:
 python run_workflow.py
+
+Add in info about mcp server
