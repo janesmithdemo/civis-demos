@@ -11,5 +11,7 @@ cd /workspace/civis-demos/civis_studio_demo
 To run the job run_workflow.py fun this command:
 python run_workflow.py
 
-Add in info about mcp server, change code so that it doesn't require a fixed workflow.
-What is setup vs what they have to setup. Go over pros and cons of copilot access types.
+Nice to have:
+*change code so that it doesn't require a fixed workflow.
+*What is setup vs what they have to setup. 
+*Go over pros and cons of copilot access types.
