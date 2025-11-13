@@ -5,8 +5,6 @@ from civis.futures import CivisFuture
 # Initialize the client
 client = civis.APIClient()
 
-#test comment
-
 # Workflow ID from the URL
 WORKFLOW_ID = 116976
 
