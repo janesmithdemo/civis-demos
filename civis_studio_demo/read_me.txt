@@ -1,5 +1,7 @@
 Notes for civis_studio_demo
 
+add note 
+
 The GitHub can be found here: https://github.com/janesmithdemo/civis-demos/tree/civis_studio_demo/civis_studio_demo
 
 The run_workflow.py runs the yalm plot_query_workflow.yalm, and 
