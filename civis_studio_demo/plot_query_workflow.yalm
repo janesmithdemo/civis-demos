@@ -1,0 +1,123 @@
+---
+version: '2.0'
+workflow:
+  input:
+  - DATABASE_CRED_NAME
+  - TABLE
+  tasks:
+    query_data:
+      action: civis.python3_script
+      input:
+        name: Query Data
+        params: 
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
+        source: |
+          import os
+          import civis
+          import pandas as pd
+          #test note
+
+          DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
+          TABLE = os.environ['TABLE']
+
+          query = f"""
+          SELECT
+              avg(petallength) petallength,
+              avg(sepalwidth) sepalwidth,
+              species
+          FROM
+              {TABLE}
+          GROUP BY
+              species
+          """
+
+          result = civis.io.read_civis_sql(
+              sql=query,
+              database=DATABASE_CRED,
+              use_pandas=True
+          )
+
+          civis.io.dataframe_to_civis(
+              df=result,
+              table='public.iris_civis_studio_demo',
+              database=DATABASE_CRED,
+              existing_table_rows='drop'
+          )
+        arguments:
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
+        required_resources:
+          cpu: 256
+          memory: 1024
+          disk_space: 2.0
+      on-success:
+      - create_plot
+    create_plot:
+      action: civis.scripts.python3
+      input:
+        name: Create Seaborn Plot
+        params: 
+          - name: DATABASE_CRED_NAME
+            type: string
+          - name: TABLE
+            type: string
+        source: |
+          import os
+          import civis
+          import pandas as pd
+          os.system("pip install seaborn")
+          import seaborn as sns
+          import matplotlib.pyplot as plt
+
+          DATABASE_CRED = os.environ['DATABASE_CRED_NAME']
+          TABLE = os.environ['TABLE']
+
+          df = civis.io.read_civis_sql(
+              sql=f"SELECT * FROM public.iris_civis_studio_demo",
+              database=DATABASE_CRED,
+              return_as="pandas"
+          )
+
+          sns.set_palette("husl")
+
+          plt.figure(figsize=(10, 6))
+
+          ax = sns.barplot(data=df.melt(id_vars=['species']), 
+                          x='species',
+                          y='value',
+                          hue='variable')
+
+          plt.title('Average Petal Length and Sepal Width by Species', pad=20)
+          plt.xlabel('Species')
+          plt.ylabel('Measurement (cm)')
+
+          plt.xticks(rotation=45)
+          plt.tight_layout()
+
+          # Save locally
+          plt.savefig('iris_plot.png')
+
+          # Save to Civis Files
+          file_id = civis.io.file_to_civis('iris_plot.png', 'Iris Measurements Plot')
+
+          # Print the file_id so you can see it in the logs
+          print(f"File ID: {file_id}")
+
+          # Add as run output using the correct endpoint for Python scripts
+          client = civis.APIClient()
+          client.scripts.post_python3_runs_outputs(
+              id=int(os.environ['CIVIS_JOB_ID']),
+              run_id=int(os.environ['CIVIS_RUN_ID']),
+              object_type='File',
+              object_id=file_id
+          )
+        arguments:
+          DATABASE_CRED_NAME: "<% $.DATABASE_CRED_NAME %>"
+          TABLE: "<% $.TABLE %>"
+        required_resources:
+          cpu: 1024
+          memory: 2048
+          disk_space: 4.0
