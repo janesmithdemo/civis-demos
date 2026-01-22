@@ -1,0 +1,11 @@
+version: '2.0'
+workflow:
+  tasks:
+    sync_Client1_data:
+      action: std.noop
+    sync_Client2_data:
+      action: std.noop
+    sync_Client3_data:
+      action: std.noop
+    sync_Client4_data:
+      action: std.noop
