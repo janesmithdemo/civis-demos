@@ -115,13 +115,41 @@ def main():
 
     client = civis.APIClient()
     if args.workflow_id:
-        wf = client.workflows.patch(args.workflow_id, name=args.name, definition=definition)
-        logger.info(f"Workflow updated: id={wf.id} name='{args.name}'")
+        wf = client.workflows.get(args.workflow_id)
+        if _is_git_backed(wf.id, client):
+            # Git-backed: definition is owned by the repo. Checkout the
+            # latest commit we just pushed rather than patching inline.
+            _checkout_latest(wf.id, client)
+            logger.info(f"Workflow {wf.id} synced from git (checkout-latest)")
+        else:
+            client.workflows.patch(wf.id, name=args.name, definition=definition)
+            logger.info(f"Workflow updated: id={wf.id} name='{args.name}'")
+            _attach_git(wf.id, args.repo_url, args.repo_ref, client)
     else:
         wf = client.workflows.post(name=args.name, definition=definition)
         logger.info(f"Workflow created: id={wf.id} name='{args.name}'")
+        _attach_git(wf.id, args.repo_url, args.repo_ref, client)
 
-    _attach_git(wf.id, args.repo_url, args.repo_ref, client)
+
+def _is_git_backed(workflow_id, client):
+    import os
+    api_key = os.environ["CIVIS_API_KEY"]
+    resp = requests.get(
+        f"https://api.civisanalytics.com/workflows/{workflow_id}/git",
+        headers={"Authorization": f"Bearer {api_key}"},
+    )
+    return resp.ok and resp.json().get("gitRepoUrl") is not None
+
+
+def _checkout_latest(workflow_id, client):
+    import os
+    api_key = os.environ["CIVIS_API_KEY"]
+    resp = requests.post(
+        f"https://api.civisanalytics.com/workflows/{workflow_id}/git/checkout-latest",
+        headers={"Authorization": f"Bearer {api_key}"},
+    )
+    resp.raise_for_status()
+    logger.info(f"Checked out latest git commit for workflow {workflow_id}")
 
 
 def _attach_git(workflow_id, repo_url, repo_ref, client):
