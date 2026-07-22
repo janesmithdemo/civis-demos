@@ -8,9 +8,11 @@ Params (env vars):
     SURVEY_DB_CREDENTIAL_ID Civis credential ID for SURVEY_DB_ID
     OUTPUT_SCHEMA           schema to write output tables into
     STATE                   two-letter state abbreviation, e.g. "OH"
-    CENSUS_API_KEY          Census API key (census.gov/data/key_signup.html) --
+    CENSUS_API_KEY_PASSWORD Census API key (census.gov/data/key_signup.html) --
                              mandatory as of this writing, the Census API
                              rejects unauthenticated requests entirely.
+                             (Exposed as CENSUS_API_KEY_PASSWORD because it is
+                             stored as a Civis credential-type parameter.)
 
 NOTE: the exact env var names Civis exposes for a Database-type template
 parameter should be confirmed against the published template's actual
@@ -38,7 +40,7 @@ def main():
     survey_id = os.environ["SURVEY_ID"]
     schema = os.environ["OUTPUT_SCHEMA"]
     state = os.environ["STATE"]
-    census_api_key = os.environ["CENSUS_API_KEY"]
+    census_api_key = os.environ["CENSUS_API_KEY_PASSWORD"]
     database = {
         "database": int(os.environ["SURVEY_DB_ID"]),
         "credential_id": int(os.environ["SURVEY_DB_CREDENTIAL_ID"]),
