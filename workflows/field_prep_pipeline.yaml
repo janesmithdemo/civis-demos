@@ -23,7 +23,7 @@ field_prep_pipeline:
     pull_acs_benchmarks:
       action: civis.scripts.custom
       input:
-        from_template_id: REPLACE_WITH_PULL_ACS_BENCHMARKS_TEMPLATE_ID
+        from_template_id: 318569
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
@@ -32,7 +32,7 @@ field_prep_pipeline:
     draw_voterfile_sample:
       action: civis.scripts.custom
       input:
-        from_template_id: REPLACE_WITH_DRAW_VOTERFILE_SAMPLE_TEMPLATE_ID
+        from_template_id: 318570
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
@@ -46,7 +46,7 @@ field_prep_pipeline:
     export_field_file:
       action: civis.scripts.custom
       input:
-        from_template_id: REPLACE_WITH_EXPORT_FIELD_FILE_TEMPLATE_ID
+        from_template_id: 318571
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
