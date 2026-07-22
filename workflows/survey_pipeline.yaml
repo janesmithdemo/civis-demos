@@ -66,3 +66,13 @@ survey_demo_pipeline:
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
+      on-success:
+        - publish_report
+
+    publish_report:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_PUBLISH_REPORT_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>

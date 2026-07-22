@@ -28,6 +28,7 @@ SCRIPT_NAMES = [
     "02_draw_sample",
     "03_conduct_survey",
     "04_weight_and_report",
+    "08_publish_report",
 ]
 
 SCRIPT_IDS_PATH = pathlib.Path(__file__).resolve().parent / "script_ids.json"

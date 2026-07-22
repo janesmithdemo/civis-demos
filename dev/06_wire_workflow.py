@@ -41,6 +41,7 @@ PLACEHOLDERS = {
     "draw_sample": "REPLACE_WITH_DRAW_SAMPLE_TEMPLATE_ID",
     "conduct_survey": "REPLACE_WITH_CONDUCT_SURVEY_TEMPLATE_ID",
     "weight_and_report": "REPLACE_WITH_WEIGHT_AND_REPORT_TEMPLATE_ID",
+    "publish_report": "REPLACE_WITH_PUBLISH_REPORT_TEMPLATE_ID",
 }
 
 
@@ -55,6 +56,7 @@ def main():
     parser.add_argument("--template-id-02", type=int)
     parser.add_argument("--template-id-03", type=int)
     parser.add_argument("--template-id-04", type=int)
+    parser.add_argument("--template-id-05", type=int)
     args = parser.parse_args()
 
     # Load template IDs: flags override file values
@@ -69,6 +71,7 @@ def main():
         "draw_sample": args.template_id_02,
         "conduct_survey": args.template_id_03,
         "weight_and_report": args.template_id_04,
+        "publish_report": args.template_id_05,
     }
     for key, val in overrides.items():
         if val is not None:

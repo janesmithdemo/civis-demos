@@ -78,6 +78,17 @@ SCRIPTS = [
         ],
         "key": "weight_and_report",
     },
+    {
+        "name": "08 Publish Report",
+        "command": "cd /app && pip install -r requirements.txt && python dev/08_publish_report.py",
+        "params": [
+            {"name": "SURVEY_ID", "type": "string", "required": True},
+            {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
+            {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
+            {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
+        ],
+        "key": "publish_report",
+    },
 ]
 
 
