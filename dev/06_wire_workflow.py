@@ -99,19 +99,18 @@ def main():
         f.write(definition)
     logger.info(f"Wrote filled workflow definition to {WORKFLOW_YAML}")
 
-    subprocess.run(
-        ["git", "add", str(WORKFLOW_YAML)],
-        cwd=REPO_ROOT, check=True,
-    )
-    subprocess.run(
-        ["git", "commit", "-m", f"deploy: wire workflow with real template IDs\n\n{_id_summary(template_ids)}"],
-        cwd=REPO_ROOT, check=True,
-    )
-    subprocess.run(
-        ["git", "push"],
-        cwd=REPO_ROOT, check=True,
-    )
-    logger.info("Committed and pushed workflow YAML to version control")
+    subprocess.run(["git", "add", str(WORKFLOW_YAML)], cwd=REPO_ROOT, check=True)
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO_ROOT)
+    if diff.returncode != 0:
+        subprocess.run(
+            ["git", "commit", "-m",
+             f"deploy: wire workflow with real template IDs\n\n{_id_summary(template_ids)}"],
+            cwd=REPO_ROOT, check=True,
+        )
+        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True)
+        logger.info("Committed and pushed workflow YAML to version control")
+    else:
+        logger.info("Workflow YAML unchanged — skipping commit")
 
     client = civis.APIClient()
     if args.workflow_id:
