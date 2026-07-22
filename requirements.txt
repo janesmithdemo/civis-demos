@@ -1,8 +1,0 @@
-devtools 
-shiny 
-shinydashboard
-tidyr
-dplyr 
-RColorBrewer 
-ggplot2 
-gsheet
