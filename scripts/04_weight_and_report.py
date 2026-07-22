@@ -27,10 +27,9 @@ logger = civis.civis_logger(__name__)
 def main():
     survey_id = os.environ["SURVEY_ID"]
     schema = os.environ["OUTPUT_SCHEMA"]
-    database = {
-        "database": int(os.environ["SURVEY_DB_ID"]),
-        "credential_id": int(os.environ["SURVEY_DB_CREDENTIAL_ID"]),
-    }
+    database = {"database": int(os.environ["SURVEY_DB_ID"])}
+    if os.environ.get("SURVEY_DB_CREDENTIAL_ID"):
+        database["credential_id"] = int(os.environ["SURVEY_DB_CREDENTIAL_ID"])
 
     joined_df = _read_joined_sample_and_responses(schema, survey_id, database)
     age_gender_targets, race_targets = _read_acs_targets(schema, survey_id, database)

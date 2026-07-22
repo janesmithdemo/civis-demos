@@ -42,10 +42,9 @@ def main():
     voterfile_table = os.environ["VOTERFILE_TABLE"]
     sample_size = int(os.environ["SAMPLE_SIZE"])
     random_seed = _optional_int(os.environ.get("RANDOM_SEED"))
-    database = {
-        "database": int(os.environ["SURVEY_DB_ID"]),
-        "credential_id": int(os.environ["SURVEY_DB_CREDENTIAL_ID"]),
-    }
+    database = {"database": int(os.environ["SURVEY_DB_ID"])}
+    if os.environ.get("SURVEY_DB_CREDENTIAL_ID"):
+        database["credential_id"] = int(os.environ["SURVEY_DB_CREDENTIAL_ID"])
 
     with open(CONFIG_DIR / "strata.yaml") as f:
         strata_config = yaml.safe_load(f)

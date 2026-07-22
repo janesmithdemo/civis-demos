@@ -31,10 +31,9 @@ def main():
     schema = os.environ["OUTPUT_SCHEMA"]
     base_response_rate = float(os.environ["BASE_RESPONSE_RATE"])
     random_seed = _optional_int(os.environ.get("RANDOM_SEED"))
-    database = {
-        "database": int(os.environ["SURVEY_DB_ID"]),
-        "credential_id": int(os.environ["SURVEY_DB_CREDENTIAL_ID"]),
-    }
+    database = {"database": int(os.environ["SURVEY_DB_ID"])}
+    if os.environ.get("SURVEY_DB_CREDENTIAL_ID"):
+        database["credential_id"] = int(os.environ["SURVEY_DB_CREDENTIAL_ID"])
 
     sample_table = f"{schema}.{survey_id}_sample"
     logger.info(f"Reading sample from {sample_table}")

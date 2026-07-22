@@ -41,10 +41,9 @@ def main():
     schema = os.environ["OUTPUT_SCHEMA"]
     state = os.environ["STATE"]
     census_api_key = os.environ["CENSUS_API_KEY_PASSWORD"]
-    database = {
-        "database": int(os.environ["SURVEY_DB_ID"]),
-        "credential_id": int(os.environ["SURVEY_DB_CREDENTIAL_ID"]),
-    }
+    database = {"database": int(os.environ["SURVEY_DB_ID"])}
+    if os.environ.get("SURVEY_DB_CREDENTIAL_ID"):
+        database["credential_id"] = int(os.environ["SURVEY_DB_CREDENTIAL_ID"])
 
     strata_config = _load_yaml("strata.yaml")
     crosswalks_config = _load_yaml("crosswalks.yaml")

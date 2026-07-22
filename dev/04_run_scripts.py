@@ -61,7 +61,7 @@ def main():
     parser.add_argument("--base-response-rate", type=float, required=True)
     parser.add_argument("--random-seed", type=int, default=None)
     parser.add_argument("--db-id", type=int, default=32)
-    parser.add_argument("--credential-id", type=int, default=2078)
+    parser.add_argument("--credential-id", type=int, default=None)
     parser.add_argument("--script-id-01", type=int)
     parser.add_argument("--script-id-02", type=int)
     parser.add_argument("--script-id-03", type=int)
@@ -91,10 +91,9 @@ def main():
             "Run 03_create_scripts.py first or pass --script-id-* flags."
         )
 
-    db_args = {
-        "SURVEY_DB_ID": str(args.db_id),
-        "SURVEY_DB_CREDENTIAL_ID": str(args.credential_id),
-    }
+    db_args = {"SURVEY_DB_ID": str(args.db_id)}
+    if args.credential_id:
+        db_args["SURVEY_DB_CREDENTIAL_ID"] = str(args.credential_id)
     random_seed = {"RANDOM_SEED": str(args.random_seed)} if args.random_seed is not None else {}
 
     client = civis.APIClient()
