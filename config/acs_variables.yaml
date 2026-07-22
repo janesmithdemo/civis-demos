@@ -1,0 +1,72 @@
+# Census API dataset + raw variable codes pulled by survey_demo.acs.
+#
+# See crosswalks.yaml for how these raw ACS variables get recoded into the
+# voterfile's age_bucket_noncommercial / gender_noncommercial /
+# race5way_noncommercial categories.
+dataset: "2021/acs/acs5"
+base_url: "https://api.census.gov/data"
+
+tables:
+  # SEX BY AGE -- source for age_bucket_noncommercial x gender_noncommercial
+  age_by_sex:
+    table_id: B01001
+    variables:
+      - B01001_001E # Total population
+      - B01001_002E # Male, total
+      - B01001_007E # Male, 18-19
+      - B01001_008E # Male, 20
+      - B01001_009E # Male, 21
+      - B01001_010E # Male, 22-24
+      - B01001_011E # Male, 25-29
+      - B01001_012E # Male, 30-34
+      - B01001_013E # Male, 35-39
+      - B01001_014E # Male, 40-44
+      - B01001_015E # Male, 45-49
+      - B01001_016E # Male, 50-54
+      - B01001_017E # Male, 55-59
+      - B01001_018E # Male, 60-61
+      - B01001_019E # Male, 62-64
+      - B01001_020E # Male, 65-66
+      - B01001_021E # Male, 67-69
+      - B01001_022E # Male, 70-74
+      - B01001_023E # Male, 75-79
+      - B01001_024E # Male, 80-84
+      - B01001_025E # Male, 85+
+      - B01001_026E # Female, total
+      - B01001_031E # Female, 18-19
+      - B01001_032E # Female, 20
+      - B01001_033E # Female, 21
+      - B01001_034E # Female, 22-24
+      - B01001_035E # Female, 25-29
+      - B01001_036E # Female, 30-34
+      - B01001_037E # Female, 35-39
+      - B01001_038E # Female, 40-44
+      - B01001_039E # Female, 45-49
+      - B01001_040E # Female, 50-54
+      - B01001_041E # Female, 55-59
+      - B01001_042E # Female, 60-61
+      - B01001_043E # Female, 62-64
+      - B01001_044E # Female, 65-66
+      - B01001_045E # Female, 67-69
+      - B01001_046E # Female, 70-74
+      - B01001_047E # Female, 75-79
+      - B01001_048E # Female, 80-84
+      - B01001_049E # Female, 85+
+
+  # HISPANIC OR LATINO ORIGIN BY RACE -- source for race5way_noncommercial
+  race_hispanic:
+    table_id: B03002
+    variables:
+      - B03002_001E # Total population
+      - B03002_003E # Not Hispanic, White alone
+      - B03002_004E # Not Hispanic, Black or African American alone
+      - B03002_005E # Not Hispanic, American Indian and Alaska Native alone
+      - B03002_006E # Not Hispanic, Asian alone
+      - B03002_007E # Not Hispanic, Native Hawaiian and Other Pacific Islander alone
+      - B03002_008E # Not Hispanic, Some other race alone
+      - B03002_009E # Not Hispanic, Two or more races
+      - B03002_012E # Hispanic or Latino (any race)
+
+geography:
+  level: state
+  for_param_template: "state:{fips}"

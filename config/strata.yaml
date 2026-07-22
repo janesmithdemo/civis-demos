@@ -1,0 +1,38 @@
+# Strata variables used for SAMPLE DESIGN (draw_sample.py).
+#
+# These are the voterfile columns used to define sampling cells. Every
+# variable here must exist on the input voterfile table with exactly the
+# listed categories. Variables also used as raking targets (see
+# crosswalks.yaml) must produce identical category labels in both places.
+variables:
+  - column: age_bucket_noncommercial
+    categories: ["18-34", "35-49", "50-64", "65+"]
+  - column: gender_noncommercial
+    categories: ["Male", "Female"]
+  - column: race5way_noncommercial
+    categories: ["White", "AfAm", "Hispanic", "Asian", "Native"]
+  # Sampling-only dimensions: no ACS equivalent, so never used as a raking
+  # target in weighting.py, only to balance the drawn sample.
+  - column: vf_reg_party
+    categories:
+      - "Democrat"
+      - "Republican"
+      - "Independent"
+      - "Unaffiliated"
+      - "No Party"
+      - "Other"
+      - "Green"
+      - "Conservative"
+      - "Working Fam"
+      - "Libertarian"
+      - "Unknown"
+  - column: urbanicity
+    categories: ["Rural", "Suburban", "Urban"]
+
+# Which of the variables above define the raking target dimensions used in
+# weighting.py. Must be a subset of `variables` above, and each must have a
+# matching entry in crosswalks.yaml.
+raking_dimensions:
+  - age_bucket_noncommercial
+  - gender_noncommercial
+  - race5way_noncommercial

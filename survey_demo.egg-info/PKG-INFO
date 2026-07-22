@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: survey-demo
+Version: 0.1.0
+Summary: Demo survey sampling/weighting pipeline for Civis Platform infrastructure enablement
+Requires-Python: >=3.10
+Requires-Dist: pandas>=2.0
+Requires-Dist: numpy>=1.24
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: requests>=2.28
+Requires-Dist: ipfn>=1.4
+Requires-Dist: civis>=2.0
