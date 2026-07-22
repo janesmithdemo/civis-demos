@@ -44,8 +44,8 @@ def patch_and_run(client, script_id, label, arguments):
 def wait_for(client, script_id, run_id, label):
     fut = civis.futures.ContainerFuture(script_id, run_id, client=client)
     fut.result()
-    if fut.state != "succeeded":
-        logger.error(f"{label} ended in state={fut.state}; aborting")
+    if fut._civis_state != "succeeded":
+        logger.error(f"{label} ended in state={fut._civis_state}; aborting")
         sys.exit(1)
     logger.info(f"  {label} succeeded")
 

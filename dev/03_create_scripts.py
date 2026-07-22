@@ -18,7 +18,7 @@ import civis
 
 logger = civis.civis_logger(__name__)
 
-DB_ID = 32
+DB_ID = 326
 DB_CREDENTIAL_ID = 2078
 DOCKER_IMAGE = "civisanalytics/datascience-python"
 DOCKER_TAG = "8.4"
@@ -34,7 +34,6 @@ SCRIPTS = [
             {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
             {"name": "STATE", "type": "string", "required": True},
             {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
-            {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
             # value set below once census_credential_id is known
             {"name": "CENSUS_API_KEY", "type": "credential_custom"},
         ],
