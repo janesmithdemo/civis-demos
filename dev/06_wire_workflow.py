@@ -38,8 +38,8 @@ TEMPLATE_IDS_PATH = pathlib.Path(__file__).resolve().parent / "template_ids.json
 
 PLACEHOLDERS = {
     "pull_acs_benchmarks": "REPLACE_WITH_PULL_ACS_BENCHMARKS_TEMPLATE_ID",
-    "draw_sample": "REPLACE_WITH_DRAW_SAMPLE_TEMPLATE_ID",
-    "conduct_survey": "REPLACE_WITH_CONDUCT_SURVEY_TEMPLATE_ID",
+    "draw_voterfile_sample": "REPLACE_WITH_DRAW_VOTERFILE_SAMPLE_TEMPLATE_ID",
+    "export_field_file": "REPLACE_WITH_EXPORT_FIELD_FILE_TEMPLATE_ID",
     "weight_and_report": "REPLACE_WITH_WEIGHT_AND_REPORT_TEMPLATE_ID",
     "publish_report": "REPLACE_WITH_PUBLISH_REPORT_TEMPLATE_ID",
 }
@@ -68,8 +68,8 @@ def main():
 
     overrides = {
         "pull_acs_benchmarks": args.template_id_01,
-        "draw_sample": args.template_id_02,
-        "conduct_survey": args.template_id_03,
+        "draw_voterfile_sample": args.template_id_02,
+        "export_field_file": args.template_id_03,
         "weight_and_report": args.template_id_04,
         "publish_report": args.template_id_05,
     }

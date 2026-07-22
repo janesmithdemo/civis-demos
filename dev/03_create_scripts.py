@@ -40,8 +40,8 @@ SCRIPTS = [
         "key": "pull_acs_benchmarks",
     },
     {
-        "name": "02 Draw Sample",
-        "command": "cd /app && pip install -r requirements.txt && python scripts/02_draw_sample.py",
+        "name": "02 Draw Voterfile Sample",
+        "command": "cd /app && pip install -r requirements.txt && python scripts/02_draw_voterfile_sample.py",
         "params": [
             {"name": "SURVEY_ID", "type": "string", "required": True},
             {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
@@ -52,20 +52,18 @@ SCRIPTS = [
             {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
             {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
         ],
-        "key": "draw_sample",
+        "key": "draw_voterfile_sample",
     },
     {
-        "name": "03 Conduct Survey",
-        "command": "cd /app && pip install -r requirements.txt && python scripts/03_conduct_survey.py",
+        "name": "03 Export Field File",
+        "command": "cd /app && pip install -r requirements.txt && python scripts/03_export_field_file.py",
         "params": [
             {"name": "SURVEY_ID", "type": "string", "required": True},
             {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
-            {"name": "BASE_RESPONSE_RATE", "type": "float", "required": True},
-            {"name": "RANDOM_SEED", "type": "integer", "required": False},
             {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
             {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
         ],
-        "key": "conduct_survey",
+        "key": "export_field_file",
     },
     {
         "name": "04 Weight and Report",

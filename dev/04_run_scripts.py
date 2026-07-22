@@ -99,14 +99,14 @@ def main():
     client = civis.APIClient()
 
     # Stage 1: 01 and 02 are independent — patch and kick off both, then wait.
-    logger.info("Stage 1: launching 01_pull_acs_benchmarks and 02_draw_sample in parallel")
+    logger.info("Stage 1: launching 01_pull_acs_benchmarks and 02_draw_voterfile_sample in parallel")
     run_01 = patch_and_run(client, id_01, "01_pull_acs_benchmarks", {
         "SURVEY_ID": args.survey_id,
         "OUTPUT_SCHEMA": args.output_schema,
         "STATE": args.state,
         **db_args,
     })
-    run_02 = patch_and_run(client, id_02, "02_draw_sample", {
+    run_02 = patch_and_run(client, id_02, "02_draw_voterfile_sample", {
         "SURVEY_ID": args.survey_id,
         "OUTPUT_SCHEMA": args.output_schema,
         "VOTERFILE_SCHEMA": args.voterfile_schema,
@@ -117,17 +117,17 @@ def main():
     })
 
     wait_for(client, id_01, run_01.id, "01_pull_acs_benchmarks")
-    wait_for(client, id_02, run_02.id, "02_draw_sample")
+    wait_for(client, id_02, run_02.id, "02_draw_voterfile_sample")
 
     # Stage 2: 03 depends on 02
-    run_03 = patch_and_run(client, id_03, "03_conduct_survey", {
+    run_03 = patch_and_run(client, id_03, "03_export_field_file", {
         "SURVEY_ID": args.survey_id,
         "OUTPUT_SCHEMA": args.output_schema,
         "BASE_RESPONSE_RATE": str(args.base_response_rate),
         **db_args,
         **random_seed,
     })
-    wait_for(client, id_03, run_03.id, "03_conduct_survey")
+    wait_for(client, id_03, run_03.id, "03_export_field_file")
 
     # Stage 3: 04 depends on both 01 and 03
     run_04 = patch_and_run(client, id_04, "04_weight_and_report", {

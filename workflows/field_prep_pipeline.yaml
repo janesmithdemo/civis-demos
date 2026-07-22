@@ -1,0 +1,52 @@
+version: '2.0'
+
+# Workflow 1 of 2: Field Prep
+#
+# Pulls ACS benchmarks (for later weighting) and draws a stratified
+# voterfile sample in parallel, then exports the sample as a downloadable
+# field file for the in-house survey team.
+#
+# When this workflow completes, hand the exported field file to the survey
+# team. Once they return results, upload them via the file import job in
+# results_pipeline and run Workflow 2.
+field_prep_pipeline:
+  type: direct
+  input:
+    - survey_id
+    - output_schema
+    - state
+    - voterfile_schema
+    - voterfile_table
+    - sample_size
+    - random_seed: null
+  tasks:
+    pull_acs_benchmarks:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_PULL_ACS_BENCHMARKS_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>
+          STATE: <% $.state %>
+
+    draw_voterfile_sample:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_DRAW_VOTERFILE_SAMPLE_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>
+          VOTERFILE_SCHEMA: <% $.voterfile_schema %>
+          VOTERFILE_TABLE: <% $.voterfile_table %>
+          SAMPLE_SIZE: <% $.sample_size %>
+          RANDOM_SEED: <% $.random_seed %>
+      on-success:
+        - export_field_file
+
+    export_field_file:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_EXPORT_FIELD_FILE_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>

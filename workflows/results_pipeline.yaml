@@ -1,0 +1,40 @@
+version: '2.0'
+
+# Workflow 2 of 2: Results Processing
+#
+# Ingests survey results uploaded by the buyer via the static file import
+# job, then rakes weights to ACS benchmarks and publishes the report.
+#
+# Before running: open the import job (id REPLACE_WITH_IMPORT_JOB_ID in
+# Civis Platform), upload the completed survey CSV, then execute this
+# workflow with the survey_id and output_schema used in Workflow 1.
+results_pipeline:
+  type: direct
+  input:
+    - survey_id
+    - output_schema
+  tasks:
+    ingest_survey_results:
+      action: civis.run_job
+      input:
+        id: REPLACE_WITH_IMPORT_JOB_ID
+      on-success:
+        - weight_and_report
+
+    weight_and_report:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_WEIGHT_AND_REPORT_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>
+      on-success:
+        - publish_report
+
+    publish_report:
+      action: civis.scripts.custom
+      input:
+        from_template_id: REPLACE_WITH_PUBLISH_REPORT_TEMPLATE_ID
+        arguments:
+          SURVEY_ID: <% $.survey_id %>
+          OUTPUT_SCHEMA: <% $.output_schema %>
