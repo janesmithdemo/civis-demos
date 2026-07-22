@@ -72,19 +72,36 @@ RESULTS_PLACEHOLDERS = {
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--survey-id", required=True)
-    parser.add_argument("--output-schema", required=True)
-    parser.add_argument("--state", required=True)
-    parser.add_argument("--voterfile-schema", required=True)
-    parser.add_argument("--voterfile-table", required=True)
-    parser.add_argument("--sample-size", type=int, required=True)
-    parser.add_argument("--base-response-rate", type=float, required=True)
-    parser.add_argument("--random-seed", type=int, default=None)
-    parser.add_argument("--db-id", type=int, default=326)
+    parser.add_argument("--survey-id", default=os.environ.get("SURVEY_ID"))
+    parser.add_argument("--output-schema", default=os.environ.get("OUTPUT_SCHEMA"))
+    parser.add_argument("--state", default=os.environ.get("STATE"))
+    parser.add_argument("--voterfile-schema", default=os.environ.get("VOTERFILE_SCHEMA"))
+    parser.add_argument("--voterfile-table", default=os.environ.get("VOTERFILE_TABLE"))
+    parser.add_argument("--sample-size", type=int,
+                        default=int(os.environ["SAMPLE_SIZE"]) if os.environ.get("SAMPLE_SIZE") else None)
+    parser.add_argument("--base-response-rate", type=float,
+                        default=float(os.environ["BASE_RESPONSE_RATE"]) if os.environ.get("BASE_RESPONSE_RATE") else None)
+    parser.add_argument("--random-seed", type=int,
+                        default=int(os.environ["RANDOM_SEED"]) if os.environ.get("RANDOM_SEED") else None)
+    parser.add_argument("--db-id", type=int,
+                        default=int(os.environ.get("SURVEY_DB_ID", 326)))
     parser.add_argument("--repo-url",
-                        default="https://github.com/janesmithdemo/civis-demos.git")
-    parser.add_argument("--repo-ref", default="surveys-demo")
+                        default=os.environ.get("REPO_URL", "https://github.com/janesmithdemo/civis-demos.git"))
+    parser.add_argument("--repo-ref",
+                        default=os.environ.get("REPO_REF", "surveys-demo"))
     args = parser.parse_args()
+
+    missing = [n for n, v in [
+        ("--survey-id / SURVEY_ID", args.survey_id),
+        ("--output-schema / OUTPUT_SCHEMA", args.output_schema),
+        ("--state / STATE", args.state),
+        ("--voterfile-schema / VOTERFILE_SCHEMA", args.voterfile_schema),
+        ("--voterfile-table / VOTERFILE_TABLE", args.voterfile_table),
+        ("--sample-size / SAMPLE_SIZE", args.sample_size),
+        ("--base-response-rate / BASE_RESPONSE_RATE", args.base_response_rate),
+    ] if not v]
+    if missing:
+        parser.error(f"Required: {', '.join(missing)}")
 
     client = civis.APIClient()
     template_ids = json.loads(TEMPLATE_IDS_PATH.read_text())

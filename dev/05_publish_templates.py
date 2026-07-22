@@ -24,6 +24,7 @@ import civis
 logger = civis.civis_logger(__name__)
 
 SCRIPT_NAMES = [
+    "00_setup_workflows",
     "01_pull_acs_benchmarks",
     "02_draw_voterfile_sample",
     "03_export_field_file",

@@ -27,6 +27,25 @@ OUTPUT_PATH = pathlib.Path(__file__).resolve().parent / "script_ids.json"
 
 SCRIPTS = [
     {
+        "name": "00 Setup Survey Workflows",
+        "command": "cd /app && pip install -r requirements.txt && python dev/setup_workflows.py",
+        "params": [
+            {"name": "SURVEY_ID", "type": "string", "required": True},
+            {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
+            {"name": "STATE", "type": "string", "required": True},
+            {"name": "VOTERFILE_SCHEMA", "type": "string", "required": True},
+            {"name": "VOTERFILE_TABLE", "type": "string", "required": True},
+            {"name": "SAMPLE_SIZE", "type": "integer", "required": True},
+            {"name": "BASE_RESPONSE_RATE", "type": "float", "required": True},
+            {"name": "RANDOM_SEED", "type": "integer", "required": False},
+            {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
+            {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
+            {"name": "REPO_URL", "type": "string", "value": "https://github.com/janesmithdemo/civis-demos.git"},
+            {"name": "REPO_REF", "type": "string", "value": "surveys-demo"},
+        ],
+        "key": "setup_workflows",
+    },
+    {
         "name": "01 Pull ACS Benchmarks",
         "command": "cd /app && pip install -r requirements.txt && python scripts/01_pull_acs_benchmarks.py",
         "params": [
