@@ -25,12 +25,17 @@ PARTY_COLORS = {
 
 
 def main():
+    import os
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--survey-id", required=True)
-    parser.add_argument("--output-schema", required=True)
-    parser.add_argument("--database-id", type=int, default=326)
-    parser.add_argument("--name", default=None)
+    parser.add_argument("--survey-id", default=os.environ.get("SURVEY_ID"))
+    parser.add_argument("--output-schema", default=os.environ.get("OUTPUT_SCHEMA"))
+    parser.add_argument("--database-id", type=int,
+                        default=int(os.environ.get("SURVEY_DB_ID", 326)))
+    parser.add_argument("--name", default=os.environ.get("REPORT_NAME"))
     args = parser.parse_args()
+
+    if not args.survey_id or not args.output_schema:
+        parser.error("--survey-id and --output-schema are required (or set SURVEY_ID / OUTPUT_SCHEMA env vars)")
 
     db = args.database_id
     s, sid = args.output_schema, args.survey_id
