@@ -137,7 +137,7 @@ def _is_git_backed(workflow_id, client):
         f"https://api.civisanalytics.com/workflows/{workflow_id}/git",
         headers={"Authorization": f"Bearer {api_key}"},
     )
-    return resp.ok and resp.json().get("gitRepoUrl") is not None
+    return resp.ok and resp.json().get("gitRepo") is not None
 
 
 def _checkout_latest(workflow_id, client):
