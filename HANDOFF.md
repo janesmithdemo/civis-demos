@@ -1,152 +1,270 @@
 # Handoff: Civis Survey Infrastructure Demo
 
-Read this first in a new session. It's the "why" and "what's already true" that isn't fully
-captured by reading the code alone. `README.md` and `DEPLOYMENT.md` in this same directory are
-the living reference docs — this file is orientation + things that would otherwise take a while
-to re-discover.
+Read this before touching anything in a new session. It covers state,
+architecture, all live Platform IDs, and hard-won discoveries that aren't
+obvious from the code alone.
 
-## What this is, in one paragraph
+---
 
-Civis Analytics is pitching a potential buyer (who runs surveys) on Civis Platform's
-infrastructure/enablement capabilities: standardized code-based process, reproducible Docker+Git
-execution, Civis Templates, Workflows, and standardized input/output storage for cross-survey
-analysis. Civis itself doesn't run surveys anymore. This repo's `DEMO OUTPUTS/` directory is a
-**greenfield demo pipeline** built to show that capability — 4 parameterized Python scripts
-(pull ACS benchmarks → draw a stratified sample → simulate survey responses → rake weights and
-report) that would each become a Civis script template, chained by a Civis Workflow.
+## What this is
 
-## Constraints that shaped every decision here — do not violate these
+A greenfield demo pipeline showing Civis Platform's infrastructure
+capabilities for survey-running buyers. The pitch: standardised
+code-based process, reproducible Docker+Git execution, Civis Templates and
+Workflows, and structured input/output storage.
 
-1. **Never touch real buyer data.** There is no live engagement. Nothing in this codebase reads
-   from, writes to, or is parameterized toward any buyer-supplied table. The "voterfile" this
-   pipeline samples from is either Civis's own demo data or the locally-fabricated synthetic
-   generator (`dev/generate_synthetic_voterfile.py`) — never anything resembling a real client's
-   data.
-2. **Never query live Civis Platform data on your own initiative.** The user (Owen) explicitly
-   corrected this once already: don't use Civis MCP tools (`list_tables`, `get_table`,
-   `run_query`, etc.) to browse real platform tables/data, even read-only, without being asked.
-   Ask for schemas/data dictionaries directly instead. This applies even for orientation — ask,
-   don't poke.
-3. **This repo's `.venv` and everything outside `DEMO OUTPUTS/` is a legacy `surveys-sdk-python`
-   codebase kept as reference only.** It was never reused, imported, or modified, and shouldn't
-   be. It's useful for vocabulary (see below) but nothing in `DEMO OUTPUTS/` depends on it.
-4. **Never log/print/commit secrets.** A Census API key was pasted into a chat transcript via `!
-   export` during this build (see "Census API key" below) — it never touched any file, and it
-   shouldn't in future sessions either. Use env vars indirectly, never inline in code or output.
-5. **Nothing has been committed to git yet.** `DEMO OUTPUTS/` is entirely untracked as of this
-   handoff. Don't assume anything has been pushed anywhere.
+The demo models a buyer who conducts surveys in-house. It is split into
+**two workflows**:
 
-## Where the requirements/design record lives
+| Workflow | Name | Purpose |
+|---|---|---|
+| 1 | `field_prep_pipeline` | Pull ACS benchmarks + draw voterfile sample → export field file to survey team |
+| 2 | `results_pipeline` | Ingest returned results via file import → rake weights → publish HTML report |
 
-The original plan (written in plan mode, approved by the user) is the authoritative design
-record. It may or may not be present in the new environment — treat the summary below as
-equivalent if the original file isn't available:
+A buyer runs the **Setup Workflows** template once per survey. It creates
+both workflows, pre-populates the import job with synthetic data, and
+immediately fires Workflow 1.
 
-- 4 scripts, each a Civis Template candidate: `pull_acs_benchmarks`, `draw_sample`,
-  `simulate_responses`, `weight_and_report`.
-- Pure-function package (`survey_demo/`) with no `civis.io` calls inside; thin scripts wire
-  `civis.io` reads/writes around those pure functions. This was an explicit design choice per the
-  civis-platform skill's guidance not to wrap `civis.io` in pass-through helpers.
-- Weighting: raking-to-marginals via `ipfn`, not a from-scratch calibration implementation —
-  deliberately minimal, not a showcase (the pitch is infrastructure, not survey-methodology depth).
-- Explicit ACS↔voterfile category crosswalk (`config/crosswalks.yaml`), validated for full
-  coverage before any sampling/weighting runs (`survey_demo.strata.validate_crosswalk_coverage`).
-  This was flagged as the most likely silent-failure point in a demo like this.
-- Reserved Civis parameter names avoided (`SURVEY_DB`, not `DATABASE`).
-- Synthetic voterfile generator lives in `dev/`, clearly labeled fabricated data, not one of the
-  4 numbered pipeline steps.
+---
 
-## The voterfile schema this targets
+## Constraints — do not violate
 
-The user provided a real data dictionary for Civis's own TargetSmart-style voterfile/consumer-file
-product: `DEMO OUTPUTS/Client Modeling and Basic Data Dictionaries (2).xlsx` (only field-level
-metadata was read — column names, types, descriptions — never row data). Key fields used
-throughout this pipeline: `voterbase_id`, `age_bucket_noncommercial` (`18-34`/`35-49`/`50-64`/`65+`),
-`gender_noncommercial` (`Male`/`Female`), `race5way_noncommercial`
-(`White`/`AfAm`/`Hispanic`/`Asian`/`Native`), `vf_reg_party`, `urbanicity`, `vote_g*`/`vote_p*`
-history, and modeled scores `likely_dem`/`likely_rep`/`ts_presidential_general_turnout`. The xlsx
-is a `.xlsx` binary — reading it directly fails; it was parsed via `zipfile` + the raw
-`sharedStrings.xml`/`sheetN.xml` (stdlib only, no `openpyxl`/`pandas` install needed for that step).
+1. **Never touch real buyer data.** The voterfile is either the synthetic
+   generator (`dev/generate_synthetic_voterfile.py`) or the uploaded table
+   `surveys.oh_voterfile` — never a real client table.
+2. **Never query live Civis Platform data without being asked.** Don't use
+   MCP tools (`run_query`, `list_tables`, etc.) to browse real data on your
+   own initiative. Ask Owen for schemas/data dictionaries instead.
+3. **Never log, print, or commit secrets.** The Census API key lives as a
+   Civis credential (id 39492); it never appears in code or output.
 
-## Current build status (as of this handoff)
+---
 
-Fully built and passing:
-- `survey_demo/{acs,strata,sampling,responses,weighting,reporting}.py` — pure functions, 35
-  passing pytest tests (`tests/`), all offline (no live network, no Platform access).
-- `config/{strata,crosswalks,acs_variables,state_fips}.yaml` — crosswalk coverage validated
-  against real Census variable metadata (spot-checked B01001/B03002 codes against
-  `api.census.gov/data/2021/acs/acs5/variables/<code>.json` labels — all matched).
-- `scripts/01-04` — thin `civis.io`-wired entry points.
-- `dev/generate_synthetic_voterfile.py`, `dev/verify_acs_pull.py`.
-- `workflows/survey_pipeline.yaml` — has `REPLACE_WITH_..._TEMPLATE_ID` placeholders, not yet
-  filled in (no templates published yet).
-- `Dockerfile`, `README.md`, `DEPLOYMENT.md`, `pyproject.toml`, `requirements.txt`.
+## Repository layout
 
-**Not yet done / not yet verified:**
-- Nothing has actually run on Civis Platform. The `civis.io` read/write round trip and the
-  Workflow execution are unverified — `README.md` says this explicitly, don't let a future session
-  claim otherwise without actually running it.
-- Templates not published; workflow YAML placeholders not filled in.
-- The live Census API pull was validated function-by-function with a real key run manually by the
-  user via `dev/verify_acs_pull.py` (see below) — confirm whether that run actually happened and
-  succeeded before assuming it did.
-- Two things are documented as **assumptions**, not verified: the exact env var names Civis
-  exposes for a Database-type template parameter (assumed `SURVEY_DB_ID` /
-  `SURVEY_DB_CREDENTIAL_ID`), and whether container scripts in this org have network egress to
-  `api.census.gov` by default. Both are called out in `DEPLOYMENT.md`.
+```
+scripts/
+  01_pull_acs_benchmarks.py   ← ACS marginals → {survey_id}_acs_targets_*
+  02_draw_voterfile_sample.py ← stratified sample → {survey_id}_sample
+  03_export_field_file.py     ← export sample as Civis file for survey team
+  04_weight_and_report.py     ← rake weights, topline/crosstabs/diagnostics
 
-## Bugs already found and fixed (don't reintroduce these)
+dev/
+  setup_workflows.py          ← ONE-SHOT: creates both workflows, fires WF1
+  03_create_scripts.py        ← create all backing container scripts
+  04_run_scripts.py           ← run all 4 pipeline scripts in order (debug)
+  05_publish_templates.py     ← publish backing scripts as templates
+  06_wire_workflow.py         ← lower-level single-workflow wiring utility
+  07_verify.py                ← verify output tables after a run
+  08_publish_report.py        ← build + publish HTML report to Civis
+  generate_synthetic_voterfile.py
+  verify_acs_pull.py
+  script_ids.json             ← gitignored, local IDs from 03_create_scripts
+  template_ids.json           ← gitignored, template IDs (see table below)
 
-1. **`ipfn.ipfn(...).iteration()` mutates its input array in place** and returns that same object.
-   `survey_demo/weighting.py` passes `seed.copy()` in, not `seed` — if that copy is ever removed,
-   `fitted` and `seed` alias and every raking weight silently comes out as 1 (no crash, just wrong
-   numbers). This was caught by a test that checked *actual* target-vs-weighted convergence, not
-   just "did it run."
-2. **`civis.io.dataframe_to_civis`/`read_civis_sql` take `credential_id`, not `credential`.** The
-   `{database, credential}` dict shape from the civis-platform skill's *workflow YAML* examples is
-   not the same as the Python client's kwarg names. Because both functions accept `**kwargs`,
-   passing the wrong key doesn't raise — it silently falls into the kwargs sink and the call
-   would've run under a default/wrong credential. Verified against the installed `civis==2.9.1`
-   package's actual `inspect.signature()`, not assumed.
+workflows/
+  field_prep_pipeline.yaml    ← Workflow 1 (deployed, git-backed, IDs filled)
+  results_pipeline.yaml       ← Workflow 2 (deployed, git-backed, IDs filled)
 
-Lesson for future work in this repo: when using any Civis Python client kwarg, check
-`inspect.signature()` against the installed package rather than relying on skill/doc examples
-written for YAML or the UI — the shapes aren't always the same.
+survey_demo/                  ← pure-function package (no civis.io inside)
+  acs.py, strata.py, sampling.py, responses.py, weighting.py, reporting.py
 
-## Census API key
-
-The public Census API now rejects all unauthenticated requests, including minimal ones (this
-wasn't previously the case). `CENSUS_API_KEY` is a required env var for
-`scripts/01_pull_acs_benchmarks.py` and for `dev/verify_acs_pull.py`. The user has a real key,
-exported once via `! export CENSUS_API_KEY=...` in a prior session's shell — that shell state does
-not persist across sessions or across this tool's separate Bash invocations. If live verification
-is needed again, ask the user to re-export it in their own shell and run
-`dev/verify_acs_pull.py --state <XX>` themselves; never ask them to paste the key value into chat,
-and never write it to a file yourself.
-
-## How to resume local development
-
-```bash
-cd "DEMO OUTPUTS"
-python3 -m venv .venv   # a homebrew python3.14 was used previously; system python3 lacked pip
-source .venv/bin/activate
-pip install -e . -r dev-requirements.txt
-pytest tests/ -q        # should show 35 passed
+config/
+  strata.yaml, crosswalks.yaml, acs_variables.yaml, state_fips.yaml
 ```
 
-## Likely next steps
+---
 
-Pick up roughly where this session left off:
-1. If not already done: run `dev/verify_acs_pull.py` with a real key to confirm the live ACS path
-   (user-run, per the key-handling note above).
-2. Commit and push `DEMO OUTPUTS/` (nothing is committed yet — confirm with the user first, per
-   this org's git safety norms: only commit when explicitly asked).
-3. Follow `DEPLOYMENT.md` step by step to actually deploy: load the synthetic voterfile onto
-   Platform, create the 4 container scripts, verify the two assumed-but-unverified items
-   (DB param env var names, network egress), run each script once, publish as templates, fill in
-   the workflow YAML placeholders, run the workflow, verify via the diagnostics table.
-4. Consider whether the hand-authored illustrative test fixtures
-   (`tests/fixtures/*_response.json`) should be swapped for real Census API responses now that a
-   live pull has been validated — optional, not required; the current fixtures are sufficient for
-   offline test coverage since they were generated from the real variable list in
-   `config/acs_variables.yaml`.
+## Everything that is live on Civis Platform right now
+
+### Database & credentials
+
+| Thing | Value | Notes |
+|---|---|---|
+| Database name | Civis Database | managed Redshift |
+| Database ID | **326** | use this, not 32 (SKILL.md default is wrong for this org) |
+| Remote host ID | 326 | same integer happens to match |
+| Default credential | **2078** (`jsmith_default`) | works for reads/writes from local API sessions and when set as a fixed param in backing scripts |
+| Census API credential | **39492** (`CENSUS API KEY 2026`) | stored as `credential_custom` type → exposed in containers as `CENSUS_API_KEY_PASSWORD` |
+
+### Backing scripts (container)
+
+| ID | Name | Script |
+|---|---|---|
+| 362557800 | 00 Setup Survey Workflows | `dev/setup_workflows.py` |
+| 362535366 | 01 Pull ACS Benchmarks | `scripts/01_pull_acs_benchmarks.py` |
+| 362535368 | 02 Draw Voterfile Sample | `scripts/02_draw_voterfile_sample.py` |
+| 362535370 | 03 Export Field File | `scripts/03_export_field_file.py` |
+| 362535371 | 04 Weight and Report | `scripts/04_weight_and_report.py` |
+| 362544213 | 08 Publish Report | `dev/08_publish_report.py` |
+
+### Templates
+
+| ID | Key in `template_ids.json` |
+|---|---|
+| 318584 | `setup_workflows` |
+| 318569 | `pull_acs_benchmarks` |
+| 318570 | `draw_voterfile_sample` |
+| 318571 | `export_field_file` |
+| 318572 | `weight_and_report` |
+| 318573 | `publish_report` |
+
+### Workflows (both git-backed to `surveys-demo` branch)
+
+| ID | Name | YAML |
+|---|---|---|
+| 121604 | `field_prep_pipeline` | `workflows/field_prep_pipeline.yaml` |
+| 121605 | `results_pipeline` | `workflows/results_pipeline.yaml` |
+
+The workflow YAMLs committed to `surveys-demo` contain **real template
+IDs** (filled by `setup_workflows.py` / `06_wire_workflow.py`). The
+placeholder strings (`REPLACE_WITH_...`) only exist before a setup run.
+To update a git-backed workflow after pushing changes, use
+`POST /workflows/{id}/git/checkout-latest` — patching `definition`
+inline is rejected once git is attached.
+
+### Demo survey data
+
+| Thing | Value |
+|---|---|
+| Survey ID | `demo_oh_2026` |
+| Output schema | `surveys` |
+| Voterfile | `surveys.oh_voterfile` (20 000 synthetic OH rows) |
+| Sample size | 1 000 |
+| Base response rate | 0.03 |
+| State | OH |
+| Import job (results ingest) | **362555881** — pre-populated with synthetic responses |
+| Published report | id 130568 |
+
+---
+
+## How the two-workflow setup works
+
+### Running from scratch for a new survey
+
+```bash
+python dev/setup_workflows.py \
+  --survey-id <ID> \
+  --output-schema <SCHEMA> \
+  --state <XX> \
+  --voterfile-schema <SCHEMA> \
+  --voterfile-table <TABLE> \
+  --sample-size <N> \
+  --base-response-rate <0.0-1.0>
+```
+
+`setup_workflows.py` does in one shot:
+1. Generates synthetic responses from the existing `{survey_id}_sample`
+   table (demo pre-population)
+2. Uploads CSV as a Civis file; creates a static `post_files_csv` import
+   job targeting `{schema}.{survey_id}_responses`
+3. Fills both workflow YAML placeholders with real IDs, commits + pushes
+4. Creates Workflow 1 and Workflow 2, attaches git to both
+5. Fires Workflow 1 (`post_executions` with `input=`, not `arguments=`)
+
+### Running from the Platform UI
+
+The buyer creates a custom script from template **318584**
+(`survey_demo_00_setup_workflows`), fills in parameters, and runs it. All
+parameters are also available as env vars so the script works as a
+container.
+
+### After Workflow 1 completes
+
+The `export_field_file` task writes the sample as a downloadable Civis
+file. The buyer downloads it, conducts the survey, then:
+1. Opens import job **362555881** in Platform
+2. Uploads the completed CSV (drag and drop)
+3. Runs Workflow 2
+
+---
+
+## Hard-won discoveries — don't repeat these
+
+**Civis container credentials:**
+- Run-scoped container API keys do NOT resolve `client.default_database_credential_id`
+  the same way a personal API key does. Always set `SURVEY_DB_CREDENTIAL_ID` as a fixed
+  param on backing scripts (value `2078`) rather than relying on the default.
+- Fixed params are injected as env vars and **cannot be overridden** via
+  `patch_containers(arguments={...})`. Arguments only affect non-fixed params.
+
+**Database IDs:**
+- This org has three databases: 326 (Civis Database / Redshift), 2697 (BigQuery), 1094 (postgis-demo).
+  There is no database with ID 32. SKILL.md defaults are wrong for this org.
+
+**Census API key:**
+- Stored as a Civis credential (type `credential_custom`, id 39492).
+  In containers it is exposed as `CENSUS_API_KEY_PASSWORD` (not `CENSUS_API_KEY`).
+  `scripts/01_pull_acs_benchmarks.py` reads `CENSUS_API_KEY_PASSWORD`.
+
+**civis Python client gotchas:**
+- `civis.ContainerFuture` does not exist — use `civis.futures.ContainerFuture`.
+- `ContainerFuture` has `._civis_state`, not `.state`.
+- `client.scripts.post_containers` requires `required_resources` as a positional arg.
+- `repo_http_uri` (not `repo_http_clone_url`) is the git param for container scripts.
+- `client.workflows.post_executions(id, input={...})` — the kwarg is `input`, not `arguments`.
+- `client.imports.post_files_csv` source must have `file_ids` (list of Civis file IDs).
+
+**Git-backed workflows:**
+- Attach git: `PUT /workflows/{id}/git` with `gitRepoUrl`, `gitBranch`, `gitPath`, `gitRefType`.
+- Check if git-backed: `GET /workflows/{id}/git` — look for `gitRepo` key (not `gitRepoUrl`).
+- Sync after a push: `POST /workflows/{id}/git/checkout-latest` — cannot patch `definition`
+  inline once `pull_from_git` is active.
+
+**`ipfn` mutation bug (pre-existing, already fixed):**
+- `ipfn.ipfn().iteration()` mutates its input in place. `weighting.py` passes `seed.copy()`.
+  Never remove that `.copy()` — it causes weights to silently all equal 1.
+
+---
+
+## Local development
+
+```bash
+# Install
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e . -r dev-requirements.txt
+
+# Tests (35 passing, all offline)
+pytest tests/ -q
+
+# Verify ACS pull (needs real key — user runs this, not you)
+python dev/verify_acs_pull.py --state OH
+```
+
+The `.venv/` is gitignored. `dev/script_ids.json` and `dev/template_ids.json`
+are also gitignored (environment-specific). `dev/data/` is gitignored.
+
+---
+
+## Git remote
+
+```
+origin  https://github.com/janesmithdemo/civis-demos.git (branch: surveys-demo)
+```
+
+The branch `surveys-demo` is the working branch. `master` is the base.
+The workflow YAMLs on this branch contain filled-in template IDs — they
+reflect the currently deployed state.
+
+---
+
+## What's left / possible next steps
+
+- **End-to-end workflow run:** Workflow 1 execution 11279425 was fired at
+  the end of the last session. Verify it completed, then run Workflow 2
+  (`dev/07_verify.py` can check the output tables).
+- **DEPLOYMENT.md is stale** — it describes the old single-workflow manual
+  deployment process. Consider updating or replacing it with a doc that
+  describes `setup_workflows.py` as the entry point.
+- **Tests:** 35 tests pass locally against pure functions. No integration
+  tests against the live Platform; adding a smoke-test run against
+  `surveys.demo_oh_2026_*` tables would be valuable before showing buyers.
+- **Custom Docker image:** The backing scripts currently do
+  `pip install -r requirements.txt` at run time (slow). Once stable, build
+  from `Dockerfile` and remove the runtime install step.
+- **Workflow 1 dependency note:** `pull_acs_benchmarks` runs in parallel
+  with `draw_voterfile_sample` and has no `on-success`. Workflow 1 is
+  considered complete when both `pull_acs_benchmarks` AND `export_field_file`
+  finish. The ACS targets are read by `weight_and_report` in Workflow 2, so
+  both must complete before Workflow 2 is meaningful.
