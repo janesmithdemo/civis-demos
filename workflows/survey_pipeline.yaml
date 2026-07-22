@@ -72,7 +72,7 @@ survey_demo_pipeline:
     publish_report:
       action: civis.scripts.custom
       input:
-        from_template_id: REPLACE_WITH_PUBLISH_REPORT_TEMPLATE_ID
+        from_template_id: 318573
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
