@@ -26,7 +26,7 @@ logger = civis.civis_logger(__name__)
 SCRIPT_NAMES = [
     "01_pull_acs_benchmarks",
     "02_draw_sample",
-    "03_simulate_responses",
+    "03_conduct_survey",
     "04_weight_and_report",
 ]
 

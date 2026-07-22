@@ -55,8 +55,8 @@ SCRIPTS = [
         "key": "draw_sample",
     },
     {
-        "name": "03 Simulate Responses",
-        "command": "cd /app && pip install -r requirements.txt && python scripts/03_simulate_responses.py",
+        "name": "03 Conduct Survey",
+        "command": "cd /app && pip install -r requirements.txt && python scripts/03_conduct_survey.py",
         "params": [
             {"name": "SURVEY_ID", "type": "string", "required": True},
             {"name": "OUTPUT_SCHEMA", "type": "string", "required": True},
@@ -65,7 +65,7 @@ SCRIPTS = [
             {"name": "SURVEY_DB_ID", "type": "integer", "value": str(DB_ID)},
             {"name": "SURVEY_DB_CREDENTIAL_ID", "type": "integer", "value": str(DB_CREDENTIAL_ID)},
         ],
-        "key": "simulate_responses",
+        "key": "conduct_survey",
     },
     {
         "name": "04 Weight and Report",

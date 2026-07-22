@@ -120,14 +120,14 @@ def main():
     wait_for(client, id_02, run_02.id, "02_draw_sample")
 
     # Stage 2: 03 depends on 02
-    run_03 = patch_and_run(client, id_03, "03_simulate_responses", {
+    run_03 = patch_and_run(client, id_03, "03_conduct_survey", {
         "SURVEY_ID": args.survey_id,
         "OUTPUT_SCHEMA": args.output_schema,
         "BASE_RESPONSE_RATE": str(args.base_response_rate),
         **db_args,
         **random_seed,
     })
-    wait_for(client, id_03, run_03.id, "03_simulate_responses")
+    wait_for(client, id_03, run_03.id, "03_conduct_survey")
 
     # Stage 3: 04 depends on both 01 and 03
     run_04 = patch_and_run(client, id_04, "04_weight_and_report", {

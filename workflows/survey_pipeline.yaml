@@ -44,12 +44,12 @@ survey_demo_pipeline:
           SAMPLE_SIZE: <% $.sample_size %>
           RANDOM_SEED: <% $.random_seed %>
       on-success:
-        - simulate_responses
+        - conduct_survey
 
-    simulate_responses:
+    conduct_survey:
       action: civis.scripts.custom
       input:
-        from_template_id: REPLACE_WITH_SIMULATE_RESPONSES_TEMPLATE_ID
+        from_template_id: REPLACE_WITH_CONDUCT_SURVEY_TEMPLATE_ID
         arguments:
           SURVEY_ID: <% $.survey_id %>
           OUTPUT_SCHEMA: <% $.output_schema %>
