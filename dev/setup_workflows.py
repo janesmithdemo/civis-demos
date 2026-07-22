@@ -156,7 +156,7 @@ def main():
     logger.info(f"Running Workflow 1 (id={wf1.id}): field_prep_pipeline")
     execution = client.workflows.post_executions(
         wf1.id,
-        arguments={
+        input={
             "survey_id": args.survey_id,
             "output_schema": args.output_schema,
             "state": args.state,
