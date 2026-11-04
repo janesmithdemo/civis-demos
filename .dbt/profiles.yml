@@ -1,0 +1,23 @@
+salesforce_transform:
+  target: dev
+  outputs:
+    dev:
+      type: redshift
+      host: "{{ env_var('REDSHIFT_HOST', 'redshift.acme.civis.io') }}"
+      port: 5439
+      user: "{{ env_var('REDSHIFT_USERNAME') }}"
+      password: "{{ env_var('REDSHIFT_PASSWORD') }}"
+      dbname: "{{ env_var('REDSHIFT_DBNAME', 'dev') }}"
+      schema: "{{ env_var('REDSHIFT_SCHEMA', 'salesforce_transform_dev') }}"
+      threads: 4
+      connect_timeout: 30
+    prod:
+      type: redshift
+      host: "{{ env_var('REDSHIFT_HOST', 'redshift.acme.civis.io') }}"
+      port: 5439
+      user: "{{ env_var('REDSHIFT_USERNAME') }}"
+      password: "{{ env_var('REDSHIFT_PASSWORD') }}"
+      dbname: "{{ env_var('REDSHIFT_DBNAME', 'dev') }}"
+      schema: salesforce_transform
+      threads: 8
+      connect_timeout: 30
